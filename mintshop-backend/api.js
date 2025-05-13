@@ -12,7 +12,7 @@ app.post("/api/vietqr/callback", (req, res) => {
 });
 
 // ✅ Endpoint CHUẨN để VietQR gọi POST
-app.post("/token_generate", async (req, res) => {
+app.post("/api/token_generate", async (req, res) => {
   try {
     const result = await axios.post("https://api.vietqr.io/vqr/api/token_generate", {}, {
       auth: {
