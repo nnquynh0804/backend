@@ -31,3 +31,6 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
 });
+app._router.stack
+  .filter(r => r.route)
+  .map(r => console.log("✅ ROUTE:", r.route.path));
