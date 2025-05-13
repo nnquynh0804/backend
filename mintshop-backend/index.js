@@ -8,13 +8,12 @@ app.use(bodyParser.json());
 // 1. Nhận callback từ VietQR
 app.post("/api/vietqr/callback", (req, res) => {
   console.log("📥 Callback từ VietQR:", req.body);
-
-  // TODO: xử lý thông tin đơn hàng tại đây
+  // TODO: xử lý đơn hàng
   res.status(200).send("Callback received");
 });
 
-// 2. (Tuỳ chọn) Lấy Token từ VietQR (nếu tích hợp API thật)
-app.get("/get-token", async (req, res) => {
+// 2. ✅ Route chính xác để VietQR gọi POST lấy token
+app.post("/api/token_generate", async (req, res) => {
   try {
     const result = await axios.post("https://api.vietqr.io/vqr/api/token_generate", {}, {
       auth: {
@@ -24,7 +23,7 @@ app.get("/get-token", async (req, res) => {
     });
     res.json(result.data);
   } catch (e) {
-    console.error("Lỗi lấy token:", e.message);
+    console.error("❌ Lỗi lấy token:", e.message);
     res.status(500).json({ error: e.message });
   }
 });
