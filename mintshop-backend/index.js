@@ -13,7 +13,7 @@ app.post("/api/vietqr/callback", (req, res) => {
 });
 
 // 2. ✅ Route chính xác để VietQR gọi POST lấy token
-app.post("/api/token_generate", async (req, res) => {
+app.post("/token_generate", async (req, res) => {
   try {
     const result = await axios.post("https://api.vietqr.io/vqr/api/token_generate", {}, {
       auth: {
@@ -23,10 +23,10 @@ app.post("/api/token_generate", async (req, res) => {
     });
     res.json(result.data);
   } catch (e) {
-    console.error("❌ Lỗi lấy token:", e.message);
     res.status(500).json({ error: e.message });
   }
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
