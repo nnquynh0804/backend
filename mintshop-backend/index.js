@@ -5,14 +5,13 @@ const app = express();
 
 app.use(bodyParser.json());
 
-// 1. Nhận callback từ VietQR
+// Callback từ VietQR (nếu dùng sau này)
 app.post("/api/vietqr/callback", (req, res) => {
   console.log("📥 Callback từ VietQR:", req.body);
-  // TODO: xử lý đơn hàng
   res.status(200).send("Callback received");
 });
 
-// 2. ✅ Route chính xác để VietQR gọi POST lấy token
+// ✅ Endpoint CHUẨN để VietQR gọi POST
 app.post("/token_generate", async (req, res) => {
   try {
     const result = await axios.post("https://api.vietqr.io/vqr/api/token_generate", {}, {
@@ -23,12 +22,12 @@ app.post("/token_generate", async (req, res) => {
     });
     res.json(result.data);
   } catch (e) {
+    console.error("❌ Lỗi token:", e.message);
     res.status(500).json({ error: e.message });
   }
 });
 
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`✅ Backend chạy tại http://localhost:${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
