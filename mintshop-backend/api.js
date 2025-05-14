@@ -1,23 +1,23 @@
 const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
+require("dotenv").config();
 const app = express();
 
 app.use(bodyParser.json());
 
-// Callback từ VietQR (nếu dùng sau này)
-app.post("/api/vietqr/callback", (req, res) => {
-  console.log("📥 Callback từ VietQR:", req.body);
+// Callback API cho Ecommerce
+app.post("/api/ecommerce/callback", (req, res) => {
+  console.log("📥 Callback từ VietQR (Ecommerce):", req.body);
   res.status(200).send("Callback received");
 });
 
-// ✅ Endpoint CHUẨN để VietQR gọi POST
+// Endpoint tạo token cho Ecommerce
 app.post("/api/token_generate", async (req, res) => {
   try {
     const result = await axios.post("https://api.vietqr.io/vqr/api/token_generate", {}, {
-      auth: {
-        username: process.env.VQR_USER,
-        password: process.env.VQR_PASS
+      headers: {
+        'Authorization': `Bearer ${process.env.VQR_API_KEY}` // Sử dụng API key ở đây
       }
     });
     res.json(result.data);
@@ -27,10 +27,12 @@ app.post("/api/token_generate", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
 });
+
+// In ra các routes đã đăng ký
 app._router.stack
   .filter(r => r.route)
-  .map(r => console.log("✅ ROUTE:", r.route.path));
+  .map(r => console.log(`✅ ROUTE: ${r.route.path}`));
