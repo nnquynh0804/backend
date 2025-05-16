@@ -18,7 +18,7 @@ router.post('/register', async (req, res) => {
 
   const user = await Customer.create({
     email,
-    password,
+    password: hashedPassword, // lưu vào field password
     fullName,
     phone,
     address,
@@ -31,21 +31,22 @@ router.post('/register', async (req, res) => {
 });
 
 // Đăng nhập tài khoản
-const { email, password } = req.body;
-const user = await Customer.findOne({ email });
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
-if (!user || !user.password) {
-  return res.status(401).json({ message: 'Invalid credentials' });
-}
+  const user = await Customer.findOne({ email });
+  if (!user || !user.password) {
+    return res.status(401).json({ message: 'Invalid credentials' });
+  }
 
-const isMatch = await bcrypt.compare(password, user.password);
-if (!isMatch) {
-  return res.status(401).json({ message: 'Sai mật khẩu' });
-}
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(401).json({ message: 'Sai mật khẩu' });
+  }
 
-const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
+  const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
 
-res.json({ token, role: user.role, fullName: user.fullName });
-
+  res.json({ token, role: user.role, fullName: user.fullName });
+});
 
 module.exports = router;
