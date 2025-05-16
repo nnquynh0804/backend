@@ -6,6 +6,7 @@ const User = require('../models/User');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret';
 
+// Đăng ký tài khoản
 router.post('/register', async (req, res) => {
   const { email, password, fullName, phone, address, dob } = req.body;
 
@@ -16,34 +17,35 @@ router.post('/register', async (req, res) => {
 
   const user = await User.create({
     email,
-    password: hashedPassword,     // ✅ đổi tên field lại cho đơn giản
+    hashedPassword,        // ✅ lưu mật khẩu đã mã hóa vào field "hashedPassword"
     fullName,
     phone,
     address,
     dob,
-    role: 'customer',
+    role: 'customer',      // mặc định là customer
     accounts: []
   });
 
   res.json({ message: 'Đăng ký thành công' });
 });
 
-
+// Đăng nhập tài khoản
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
-  // ✅ Sửa dòng này:
+  // ✅ kiểm tra với field "hashedPassword" thay vì "password"
   if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
+  const token = jwt.sign(
+    { userId: user._id, role: user.role },
+    JWT_SECRET,
+    { expiresIn: '1d' }
+  );
+
   res.json({ token, role: user.role, fullName: user.fullName });
 });
-
-
-
-  
 
 module.exports = router;
