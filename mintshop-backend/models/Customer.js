@@ -11,7 +11,8 @@ const customerSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   address: { type: String },
   dob: { type: Date },
-  hashedPassword: { type: String, required: true },
+  password: { type: String, required: true }, // ✅ sửa lại từ 'hashedPassword'
+  role: { type: String, enum: ['admin', 'customer'], default: 'customer' },
   accounts: [accountSchema]
 });
 
