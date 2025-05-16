@@ -16,13 +16,13 @@ router.post('/register', async (req, res) => {
 
   const user = await User.create({
     email,
-    hashedPassword,
+    password: hashedPassword,     // ✅ đổi tên field lại cho đơn giản
     fullName,
     phone,
     address,
     dob,
-    role: 'customer',   // mặc định
-    accounts: []         // mặc định là chưa có tài khoản nào
+    role: 'customer',
+    accounts: []
   });
 
   res.json({ message: 'Đăng ký thành công' });
@@ -32,12 +32,13 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
+
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
   const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
-  res.json({ token, role: user.role });
+  res.json({ token, role: user.role, fullName: user.fullName });
 });
 
 module.exports = router;
