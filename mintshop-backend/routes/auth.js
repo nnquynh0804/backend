@@ -1,8 +1,9 @@
+// routes/auth.js
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const Customer = require('../models/Customer');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret';
 
@@ -10,19 +11,19 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret';
 router.post('/register', async (req, res) => {
   const { email, password, fullName, phone, address, dob } = req.body;
 
-  const existing = await User.findOne({ email });
+  const existing = await Customer.findOne({ email });
   if (existing) return res.status(400).json({ message: 'Email đã được đăng ký' });
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await User.create({
+  const user = await Customer.create({
     email,
-    hashedPassword,        // ✅ lưu mật khẩu đã mã hóa vào field "hashedPassword"
+    password: hashedPassword,
     fullName,
     phone,
     address,
     dob,
-    role: 'customer',      // mặc định là customer
+    role: 'customer',
     accounts: []
   });
 
@@ -32,10 +33,9 @@ router.post('/register', async (req, res) => {
 // Đăng nhập tài khoản
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const user = await Customer.findOne({ email });
 
-  // ✅ kiểm tra với field "hashedPassword" thay vì "password"
-  if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
+  if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
