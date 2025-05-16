@@ -33,12 +33,15 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  if (!user || !(await bcrypt.compare(password, user.hashedPassword))) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
   const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
   res.json({ token, role: user.role, fullName: user.fullName });
 });
+
+
+  
 
 module.exports = router;
