@@ -31,21 +31,21 @@ router.post('/register', async (req, res) => {
 });
 
 // Đăng nhập tài khoản
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await Customer.findOne({ email });
+const { email, password } = req.body;
+const user = await Customer.findOne({ email });
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.status(401).json({ message: 'Invalid credentials' });
-  }
+if (!user || !user.password) {
+  return res.status(401).json({ message: 'Invalid credentials' });
+}
 
-  const token = jwt.sign(
-    { userId: user._id, role: user.role },
-    JWT_SECRET,
-    { expiresIn: '1d' }
-  );
+const isMatch = await bcrypt.compare(password, user.password);
+if (!isMatch) {
+  return res.status(401).json({ message: 'Sai mật khẩu' });
+}
 
-  res.json({ token, role: user.role, fullName: user.fullName });
-});
+const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1d' });
+
+res.json({ token, role: user.role, fullName: user.fullName });
+
 
 module.exports = router;
