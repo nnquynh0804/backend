@@ -17,5 +17,5 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/products', productRoutes);
 app.use('/customers', customerRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
