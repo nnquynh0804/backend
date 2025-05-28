@@ -36,5 +36,13 @@ router.post('/upload', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+app.use(express.json({
+  strict: true,
+  verify: (req, res, buf) => {
+    if (buf && buf.length === 0) {
+      throw new Error('❌ Empty JSON body');
+    }
+  }
+}));
 
 module.exports = router;
