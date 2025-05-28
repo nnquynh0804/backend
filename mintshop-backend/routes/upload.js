@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
 
-router.post('/', async (req, res) => {
+router.post('/upload', async (req, res) => {
   const { filename, contentBase64 } = req.body;
 
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
