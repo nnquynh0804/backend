@@ -4,7 +4,6 @@ const express = require('express');
 const fetch = require('node-fetch');
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 // Middleware để parse JSON, và kiểm tra body không rỗng
 app.use(express.json({
