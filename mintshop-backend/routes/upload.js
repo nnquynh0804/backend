@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid'); // để tạo tên file ảnh không trùng
 
 // POST /products - Thêm sản phẩm kèm ảnh base64
-router.post('/', async (req, res) => {
+router.post('/upload', async (req, res) => {
   const { name, price, quantity, imageBase64 } = req.body;
 
   if (!name || !price || !quantity || !imageBase64) {
