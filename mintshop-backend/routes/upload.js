@@ -71,6 +71,3 @@ app.get('/', (req, res) => {
   res.send('Server upload ảnh lên GitHub đang chạy');
 });
 
-app.listen(port, () => {
-  console.log(`Server chạy tại http://localhost:${port}`);
-});
