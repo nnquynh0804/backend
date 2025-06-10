@@ -14,7 +14,9 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+// Sau:
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
