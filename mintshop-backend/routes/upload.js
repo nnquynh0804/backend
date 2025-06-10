@@ -1,7 +1,6 @@
 // routes/upload.js
 const express = require('express');
 const router = express.Router();
-const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid');
 
 router.post('/', async (req, res) => {
