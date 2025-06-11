@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
   const orders = await Order.find();
   res.json(orders);
 });
-app.delete('/orders/:id', async (req, res) => {
+router.delete('/orders/:id', async (req, res) => {
   const { id } = req.params;
   try {
     await Order.findByIdAndDelete(id);
