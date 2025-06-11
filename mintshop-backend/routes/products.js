@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    const product = new Product({ name, price, quantity, images: imageUrl });
+    const product = new Product({ name, price, quantity, imageUrl });
     await product.save();
     res.status(201).json(product);
   } catch (err) {
