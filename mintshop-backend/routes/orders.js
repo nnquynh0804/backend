@@ -17,13 +17,15 @@ router.get('/', async (req, res) => {
   const orders = await Order.find();
   res.json(orders);
 });
-router.delete('/orders/:id', async (req, res) => {
+
+// DELETE - Xóa đơn hàng theo ID
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     await Order.findByIdAndDelete(id);
     res.status(200).json({ message: 'Deleted successfully' });
   } catch (err) {
-    res.status(500).json({ message: 'Delete failed', error: err });
+    res.status(500).json({ message: 'Delete failed', error: err.message });
   }
 });
 
